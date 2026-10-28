@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Профессии в IT: найди своё будущее — Хакатон «Цифровой код» 2026</title>
   
+  <meta name="theme-color" content="#76336F">
+  <meta property="og:title" content="Цифровой код: Навигатор IT-профессий">
+  <meta property="og:description" content="Интерактивный цифровой гид по 10 направлениям в IT: тест из 6 практических сценариев, сравнение ролей бок о бок и персональный образовательный маршрут.">
+  <meta property="og:type" content="website">
+
   <!-- Современные шрифты Plus Jakarta Sans и Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +27,7 @@
       --color-primary-container: #FFD7F3;
       --color-on-primary-container: #330030;
       
-      --color-secondary: #6B5767;
+      --color-secondary: #554251;
       --color-secondary-container: #F4DAEE;
       --color-on-secondary-container: #251523;
 
@@ -196,8 +201,16 @@
       white-space: nowrap;
     }
 
+    .btn .icon {
+      transition: transform 0.22s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .btn:hover .icon {
+      transform: translateX(2px);
+    }
+
     .btn:active {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
 
     .btn-primary {
@@ -209,6 +222,7 @@
     .btn-primary:hover {
       background-color: var(--color-primary-hover);
       box-shadow: var(--elevation-2);
+      transform: translateY(-2px);
     }
 
     .btn-tonal {
@@ -219,6 +233,7 @@
     .btn-tonal:hover {
       background-color: #f7caeb;
       box-shadow: var(--elevation-1);
+      transform: translateY(-2px);
     }
 
     .btn-outlined {
@@ -230,6 +245,7 @@
     .btn-outlined:hover {
       background-color: var(--color-surface-container-high);
       border-color: var(--color-primary);
+      transform: translateY(-2px);
     }
 
     .btn-text {
@@ -309,15 +325,23 @@
     .spa-screen {
       display: none;
       opacity: 0;
-      transform: translateY(12px);
-      transition: opacity 0.35s cubic-bezier(0.2, 0, 0, 1), transform 0.35s cubic-bezier(0.2, 0, 0, 1);
       padding: 36px 0 64px 0;
+    }
+
+    @keyframes screenFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .spa-screen.active {
       display: block;
-      opacity: 1;
-      transform: translateY(0);
+      animation: screenFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     /* ==========================================================================
@@ -397,6 +421,11 @@
       position: relative;
     }
 
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
     .hero-preview-badge {
       position: absolute;
       top: -12px;
@@ -409,6 +438,12 @@
       border-radius: var(--radius-full);
       box-shadow: var(--elevation-1);
       z-index: 2;
+      animation: gentleFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes previewCardSwap {
+      0% { opacity: 0.55; transform: scale(0.985); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .hero-preview-card {
@@ -418,6 +453,10 @@
       padding: 32px;
       box-shadow: var(--elevation-2);
       transition: var(--transition-smooth);
+    }
+
+    .hero-preview-card.card-updating {
+      animation: previewCardSwap 0.28s cubic-bezier(0.2, 0, 0, 1);
     }
 
     .hero-preview-card:hover {
@@ -581,6 +620,12 @@
       gap: 16px;
     }
 
+    @keyframes selectPop {
+      0% { transform: scale(0.98); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
     .option-card-interactive {
       background-color: var(--color-surface-container-low);
       border: 1.5px solid var(--color-outline);
@@ -605,6 +650,7 @@
       border-color: var(--color-primary);
       border-width: 2px;
       box-shadow: 0 0 0 1px var(--color-primary);
+      animation: selectPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .option-icon-box {
@@ -616,11 +662,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.25s ease;
     }
 
     .option-card-interactive.selected .option-icon-box {
       background-color: var(--color-primary);
       color: var(--color-on-primary);
+      transform: scale(1.05);
     }
 
     .option-card-title {
@@ -674,12 +722,14 @@
     .case-option-item:hover {
       background-color: var(--color-surface-container);
       border-color: #b39fae;
+      transform: translateY(-2px);
     }
 
     .case-option-item.selected {
       background-color: #FFF2FA;
       border-color: var(--color-primary);
       border-width: 2px;
+      animation: selectPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .radio-circle-indicator {
@@ -707,8 +757,8 @@
       border-radius: 50%;
       background-color: #FFFFFF;
       opacity: 0;
-      transform: scale(0.5);
-      transition: var(--transition-smooth);
+      transform: scale(0);
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease;
     }
 
     .case-option-item.selected .radio-circle-dot,
@@ -829,12 +879,14 @@
     .value-card-btn:hover {
       background-color: var(--color-surface-container);
       border-color: #b5a0af;
+      transform: translateY(-2px);
     }
 
     .value-card-btn.selected {
       background-color: #FFF2FA;
       border-color: var(--color-primary);
       border-width: 2px;
+      animation: selectPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .value-left-col {
@@ -899,6 +951,11 @@
       overflow: hidden;
     }
 
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(118, 51, 111, 0.22); }
+      50% { box-shadow: 0 0 0 8px rgba(118, 51, 111, 0); }
+    }
+
     .match-counter-badge {
       display: inline-flex;
       align-items: center;
@@ -908,6 +965,7 @@
       padding: 10px 22px;
       border-radius: var(--radius-full);
       box-shadow: var(--elevation-1);
+      animation: pulseGlow 2.8s infinite;
     }
 
     .match-counter-value {
@@ -933,6 +991,12 @@
       margin: 24px 0;
     }
 
+    @keyframes iconBadgePop {
+      0% { transform: scale(0.8) rotate(-6deg); opacity: 0; }
+      60% { transform: scale(1.08) rotate(2deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
     .result-profession-icon {
       width: 68px;
       height: 68px;
@@ -944,6 +1008,7 @@
       justify-content: center;
       flex-shrink: 0;
       box-shadow: var(--elevation-2);
+      animation: iconBadgePop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .result-title-h1 {
@@ -1016,6 +1081,14 @@
       margin-bottom: 12px;
       font-size: 0.875rem;
       color: var(--color-on-surface);
+      padding: 6px 8px;
+      border-radius: var(--radius-s);
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .edu-track-step:hover {
+      transform: translateX(4px);
+      background-color: #F4E8F2;
     }
 
     .edu-step-num {
@@ -1143,6 +1216,17 @@
       margin-top: 32px;
     }
 
+    @keyframes cardFadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .prof-card {
       display: flex;
       flex-direction: column;
@@ -1153,6 +1237,7 @@
       padding: 24px;
       transition: var(--transition-smooth);
       height: 100%;
+      animation: cardFadeInUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     .prof-card:hover {
@@ -1178,6 +1263,14 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+    }
+
+    .prof-card-icon svg {
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .prof-card:hover .prof-card-icon svg {
+      transform: scale(1.14);
     }
 
     .prof-card-name {
@@ -1231,6 +1324,11 @@
     .prof-bookmark-btn:hover {
       background-color: var(--color-surface-container);
       color: var(--color-primary);
+      transform: scale(1.12);
+    }
+
+    .prof-bookmark-btn:active {
+      transform: scale(0.92);
     }
 
     .prof-bookmark-btn.saved {
@@ -1545,6 +1643,38 @@
       }
     }
 
+    .mobile-prof-badge {
+      display: none;
+    }
+
+    .hero-last-match-banner {
+      margin-top: 24px;
+      padding: 14px 20px;
+      background-color: var(--color-surface-container-low);
+      border: 1px solid var(--color-outline-variant);
+      border-radius: var(--radius-l);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--elevation-1);
+    }
+    .last-match-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .last-match-label {
+      font-size: 0.8125rem;
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+    .last-match-title {
+      font-size: 1.05rem;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
     @media (max-width: 680px) {
       .hero-title {
         font-size: 2.125rem;
@@ -1559,6 +1689,19 @@
         border-right: none;
         border-bottom: 1px solid var(--color-outline-variant);
       }
+      .mobile-prof-badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        background: var(--color-primary-container);
+        padding: 2px 8px;
+        border-radius: var(--radius-s);
+        margin-bottom: 6px;
+      }
+      .compare-cell-content {
+        padding-top: 10px;
+      }
       .quiz-card, .result-card-main {
         padding: 24px 18px;
       }
@@ -1571,6 +1714,50 @@
         height: 64px;
       }
     }
+
+    @media (max-width: 640px) {
+      .top-bar-right-group .btn span {
+        display: none;
+      }
+      .top-bar-right-group .btn {
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-m);
+        justify-content: center;
+      }
+      .top-bar-right-group {
+        gap: 6px;
+      }
+      .brand-logo-btn span {
+        font-size: 1.05rem;
+      }
+      .hero-last-match-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Анимация встряхивания при незаполненном шаге */
+    @keyframes shakeAnimation {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    .anim-shake {
+      animation: shakeAnimation 0.38s ease-in-out;
+    }
+
+    /* Поддержка режима пониженного движения (Accessibility) */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1581,7 +1768,7 @@
   <header class="top-app-bar">
     <div class="app-container">
       <div class="top-bar-content">
-        <button class="brand-logo-btn" id="navLogoBtn" aria-label="Вернуться на главную">
+        <button class="brand-logo-btn" id="navLogoBtn" title="Вернуться на главную" aria-label="Вернуться на главную">
           <div class="brand-icon-box">
             <svg class="icon" viewBox="0 0 24 24">
               <polyline points="4 17 10 11 4 5"></polyline>
@@ -1592,7 +1779,7 @@
         </button>
 
         <div class="top-bar-right-group">
-          <button class="btn btn-text btn-small" id="navCatalogBtn">
+          <button class="btn btn-text btn-small" id="navCatalogBtn" title="Каталог профессий" aria-label="Каталог профессий">
             <svg class="icon" viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
@@ -1602,7 +1789,7 @@
             <span>Каталог</span>
           </button>
 
-          <button class="btn btn-text btn-small" id="navCompareBtn">
+          <button class="btn btn-text btn-small" id="navCompareBtn" title="Сравнение направлений" aria-label="Сравнение направлений">
             <svg class="icon" viewBox="0 0 24 24">
               <line x1="18" y1="20" x2="18" y2="4"></line>
               <line x1="6" y1="20" x2="6" y2="4"></line>
@@ -1612,7 +1799,7 @@
             <span>Сравнение</span>
           </button>
 
-          <button class="btn btn-tonal btn-small" id="openAiDocBtn" title="Сведения об использовании инструментов ИИ при разработке">
+          <button class="btn btn-tonal btn-small" id="openAiDocBtn" title="Сведения об использовании инструментов ИИ при разработке" aria-label="Сведения об использовании инструментов ИИ при разработке">
             <svg class="icon" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -1620,7 +1807,7 @@
             <span>ИИ в проекте</span>
           </button>
 
-          <button class="btn btn-primary btn-small" id="openLeaderboardBtn">
+          <button class="btn btn-primary btn-small" id="openLeaderboardBtn" title="Рейтинг востребованности IT-профессий" aria-label="Рейтинг востребованности IT-профессий">
             <svg class="icon" viewBox="0 0 24 24">
               <path d="M18 20V10"></path>
               <path d="M12 20V4"></path>
@@ -1687,6 +1874,16 @@
                 <circle cx="6" cy="16" r="2"></circle>
               </svg>
               <span>Сравнить направления</span>
+            </button>
+          </div>
+
+          <div id="heroLastMatchBadge" class="hero-last-match-banner" style="display: none;">
+            <div class="last-match-info">
+              <span class="last-match-label">Твой предыдущий результат:</span>
+              <strong id="heroLastMatchTitle" class="last-match-title">...</strong>
+            </div>
+            <button class="btn btn-tonal btn-small" id="heroOpenLastMatchBtn">
+              Посмотреть профиль
             </button>
           </div>
 
@@ -2515,9 +2712,9 @@
     document.addEventListener('DOMContentLoaded', () => {
 
       /* ========================================================================
-         РАСШИРЕННАЯ БАЗА ДАННЫХ: 10 ВОСТРЕБОВАННЫХ IT-ПРОФЕССИЙ
+         РЕЗЕРВНАЯ ВСТРОЕННАЯ БАЗА ДАННЫХ (ОФЛАЙН FALLBACK ДЛЯ 10 IT-ПРОФЕССИЙ)
          ======================================================================== */
-      const PROFESSIONS_DATABASE = {
+      const INLINE_FALLBACK_DATABASE = {
         frontend: {
           id: 'frontend',
           title: 'Frontend-разработчик',
@@ -2815,8 +3012,10 @@
         }
       };
 
+      let PROFESSIONS_DATABASE = INLINE_FALLBACK_DATABASE;
+
       /* ========================================================================
-         УПРАВЛЕНИЕ ЭКРАНАМИ (SPA)
+         УПРАВЛЕНИЕ ЭКРАНАМИ И HASH-РОУТИНГ (SPA С HISTORY API)
          ======================================================================== */
       const screens = {
         hero: document.getElementById('screenHero'),
@@ -2826,7 +3025,13 @@
         compare: document.getElementById('screenCompare')
       };
 
-      function switchScreen(targetKey) {
+      let isSwitchingRoute = false;
+
+      function switchScreen(targetKey, updateHash = true) {
+        if (!screens[targetKey]) {
+          targetKey = 'hero';
+        }
+
         Object.keys(screens).forEach(key => {
           if (screens[key]) {
             if (key === targetKey) {
@@ -2836,7 +3041,66 @@
             }
           }
         });
+
+        if (targetKey === 'compare') {
+          initCompareView();
+        } else if (targetKey === 'catalog') {
+          renderCatalog();
+        } else if (targetKey === 'hero') {
+          checkHeroLastMatch();
+        }
+
+        if (updateHash) {
+          const targetHash = '#' + targetKey;
+          if (window.location.hash !== targetHash) {
+            isSwitchingRoute = true;
+            window.location.hash = targetKey;
+            setTimeout(() => { isSwitchingRoute = false; }, 50);
+          }
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      window.addEventListener('hashchange', () => {
+        if (isSwitchingRoute) return;
+        const hash = window.location.hash.replace('#', '') || 'hero';
+        if (screens[hash]) {
+          if (hash === 'result') {
+            const savedId = localStorage.getItem('digital_code_last_match') || 'frontend';
+            showProfessionDetails(savedId);
+          } else {
+            switchScreen(hash, false);
+          }
+        } else {
+          switchScreen('hero', false);
+        }
+      });
+
+      /* ========================================================================
+         ОТОБРАЖЕНИЕ СОХРАНЕННОГО РЕЗУЛЬТАТА ТЕСТА НА ГЛАВНОМ ЭКРАНЕ
+         ======================================================================== */
+      function checkHeroLastMatch() {
+        const badge = document.getElementById('heroLastMatchBadge');
+        const titleEl = document.getElementById('heroLastMatchTitle');
+        const openBtn = document.getElementById('heroOpenLastMatchBtn');
+        if (!badge || !titleEl || !openBtn) return;
+
+        try {
+          const savedId = localStorage.getItem('digital_code_last_match');
+          if (savedId && PROFESSIONS_DATABASE[savedId]) {
+            const prof = PROFESSIONS_DATABASE[savedId];
+            titleEl.textContent = prof.title;
+            badge.style.display = 'flex';
+            openBtn.onclick = () => {
+              showProfessionDetails(savedId);
+            };
+            return;
+          }
+        } catch (e) {
+          console.warn('LocalStorage error', e);
+        }
+        badge.style.display = 'none';
       }
 
       document.getElementById('navLogoBtn').addEventListener('click', () => switchScreen('hero'));
@@ -2867,7 +3131,7 @@
       /* ========================================================================
          ПРЕВЬЮ-КАРТОЧКА В HERO (ЛИСТАЕТ ВСЕ 10 ПРОФЕССИЙ)
          ======================================================================== */
-      const previewKeys = Object.keys(PROFESSIONS_DATABASE);
+      let previewKeys = Object.keys(PROFESSIONS_DATABASE);
       let currentPreviewIndex = 0;
 
       const previewTitleEl = document.getElementById('previewTitle');
@@ -2877,8 +3141,16 @@
       const previewSkillsListEl = document.getElementById('previewSkillsList');
 
       function updatePreviewCard(index) {
+        if (!previewKeys.length) return;
         const prof = PROFESSIONS_DATABASE[previewKeys[index]];
         if (!prof) return;
+
+        const cardEl = document.getElementById('heroPreviewCard');
+        if (cardEl) {
+          cardEl.classList.remove('card-updating');
+          void cardEl.offsetWidth;
+          cardEl.classList.add('card-updating');
+        }
 
         previewTitleEl.textContent = prof.title;
         previewCategoryEl.textContent = prof.subtitle;
@@ -2891,11 +3163,10 @@
       }
 
       document.getElementById('previewNextCardBtn').addEventListener('click', () => {
+        if (!previewKeys.length) return;
         currentPreviewIndex = (currentPreviewIndex + 1) % previewKeys.length;
         updatePreviewCard(currentPreviewIndex);
       });
-
-      updatePreviewCard(0);
 
       /* ========================================================================
          ИНТЕРАКТИВНЫЙ ОПРОС (6 ШАГОВ)
@@ -3048,17 +3319,9 @@
 
       function shakeElement(el) {
         if (!el) return;
-        el.style.transform = 'translateX(6px)';
-        el.style.transition = 'transform 0.08s ease';
-        setTimeout(() => {
-          el.style.transform = 'translateX(-6px)';
-          setTimeout(() => {
-            el.style.transform = 'translateX(4px)';
-            setTimeout(() => {
-              el.style.transform = 'translateX(0)';
-            }, 80);
-          }, 80);
-        }, 80);
+        el.classList.remove('anim-shake');
+        void el.offsetWidth;
+        el.classList.add('anim-shake');
       }
 
       /* ========================================================================
@@ -3247,6 +3510,7 @@
           console.warn('LocalStorage error', e);
         }
 
+        checkHeroLastMatch();
         showProfessionDetails(profession.id, profession.matchBase);
       }
 
@@ -3460,28 +3724,38 @@
         compareTableContainer.innerHTML = `
           <div class="compare-table-row">
             <div class="compare-cell-title">Направление</div>
-            <div class="compare-cell-content" style="font-weight:700; font-size:1.05rem; color:var(--color-primary);">
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}" style="font-weight:700; font-size:1.05rem; color:var(--color-primary);">
+              <span class="mobile-prof-badge">${profA.title}</span>
               ${profA.title}
             </div>
-            <div class="compare-cell-content" style="font-weight:700; font-size:1.05rem; color:var(--color-primary);">
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}" style="font-weight:700; font-size:1.05rem; color:var(--color-primary);">
+              <span class="mobile-prof-badge">${profB.title}</span>
               ${profB.title}
             </div>
           </div>
 
           <div class="compare-table-row">
             <div class="compare-cell-title">Суть работы</div>
-            <div class="compare-cell-content">${profA.desc}</div>
-            <div class="compare-cell-content">${profB.desc}</div>
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}">
+              <span class="mobile-prof-badge">${profA.title}</span>
+              ${profA.desc}
+            </div>
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}">
+              <span class="mobile-prof-badge">${profB.title}</span>
+              ${profB.desc}
+            </div>
           </div>
 
           <div class="compare-table-row">
             <div class="compare-cell-title">Ключевой стек (Hard Skills)</div>
-            <div class="compare-cell-content">
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}">
+              <span class="mobile-prof-badge">${profA.title}</span>
               <div class="chip-group">
                 ${profA.skills.map(s => `<span class="skill-tag skill-tag-primary">${s}</span>`).join('')}
               </div>
             </div>
-            <div class="compare-cell-content">
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}">
+              <span class="mobile-prof-badge">${profB.title}</span>
               <div class="chip-group">
                 ${profB.skills.map(s => `<span class="skill-tag skill-tag-primary">${s}</span>`).join('')}
               </div>
@@ -3490,12 +3764,14 @@
 
           <div class="compare-table-row">
             <div class="compare-cell-title">Личные качества (Soft Skills)</div>
-            <div class="compare-cell-content">
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}">
+              <span class="mobile-prof-badge">${profA.title}</span>
               <div class="chip-group">
                 ${profA.softSkills.map(s => `<span class="skill-tag soft-skill-tag">${s}</span>`).join('')}
               </div>
             </div>
-            <div class="compare-cell-content">
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}">
+              <span class="mobile-prof-badge">${profB.title}</span>
               <div class="chip-group">
                 ${profB.softSkills.map(s => `<span class="skill-tag soft-skill-tag">${s}</span>`).join('')}
               </div>
@@ -3504,14 +3780,26 @@
 
           <div class="compare-table-row">
             <div class="compare-cell-title">Порог входа</div>
-            <div class="compare-cell-content"><strong>${profA.entryBarrier}</strong></div>
-            <div class="compare-cell-content"><strong>${profB.entryBarrier}</strong></div>
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}">
+              <span class="mobile-prof-badge">${profA.title}</span>
+              <strong>${profA.entryBarrier}</strong>
+            </div>
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}">
+              <span class="mobile-prof-badge">${profB.title}</span>
+              <strong>${profB.entryBarrier}</strong>
+            </div>
           </div>
 
           <div class="compare-table-row">
             <div class="compare-cell-title">Востребованность</div>
-            <div class="compare-cell-content">${profA.demand}</div>
-            <div class="compare-cell-content">${profB.demand}</div>
+            <div class="compare-cell-content compare-cell-a" data-prof-name="${profA.title}">
+              <span class="mobile-prof-badge">${profA.title}</span>
+              ${profA.demand}
+            </div>
+            <div class="compare-cell-content compare-cell-b" data-prof-name="${profB.title}">
+              <span class="mobile-prof-badge">${profB.title}</span>
+              ${profB.demand}
+            </div>
           </div>
         `;
       }
@@ -3635,15 +3923,20 @@
         if (optionalFocusProfId) {
           saveVote(optionalFocusProfId);
         }
+        history.pushState({ modal: 'leaderboard' }, '');
       }
 
-      function closeLeaderboardModalFunc() {
+      function closeLeaderboardModalFunc(fromHistory = false) {
+        if (!leaderboardModal.classList.contains('open')) return;
         leaderboardModal.classList.remove('open');
         document.body.style.overflow = '';
+        if (!fromHistory && history.state && history.state.modal === 'leaderboard') {
+          history.back();
+        }
       }
 
       openLeaderboardBtn.addEventListener('click', () => openLeaderboardModal());
-      closeLeaderboardBtn.addEventListener('click', closeLeaderboardModalFunc);
+      closeLeaderboardBtn.addEventListener('click', () => closeLeaderboardModalFunc());
       leaderboardModal.addEventListener('click', (e) => {
         if (e.target === leaderboardModal) closeLeaderboardModalFunc();
       });
@@ -3655,19 +3948,34 @@
       const openAiDocBtn = document.getElementById('openAiDocBtn');
       const closeAiDocBtn = document.getElementById('closeAiDocBtn');
 
-      openAiDocBtn.addEventListener('click', () => {
+      function openAiDocModal() {
         aiDocModal.classList.add('open');
         document.body.style.overflow = 'hidden';
-      });
-
-      function closeAiDocModalFunc() {
-        aiDocModal.classList.remove('open');
-        document.body.style.overflow = '';
+        history.pushState({ modal: 'aiDoc' }, '');
       }
 
-      closeAiDocBtn.addEventListener('click', closeAiDocModalFunc);
+      function closeAiDocModalFunc(fromHistory = false) {
+        if (!aiDocModal.classList.contains('open')) return;
+        aiDocModal.classList.remove('open');
+        document.body.style.overflow = '';
+        if (!fromHistory && history.state && history.state.modal === 'aiDoc') {
+          history.back();
+        }
+      }
+
+      openAiDocBtn.addEventListener('click', openAiDocModal);
+      closeAiDocBtn.addEventListener('click', () => closeAiDocModalFunc());
       aiDocModal.addEventListener('click', (e) => {
         if (e.target === aiDocModal) closeAiDocModalFunc();
+      });
+
+      window.addEventListener('popstate', (e) => {
+        if (leaderboardModal.classList.contains('open')) {
+          closeLeaderboardModalFunc(true);
+        }
+        if (aiDocModal.classList.contains('open')) {
+          closeAiDocModalFunc(true);
+        }
       });
 
       window.addEventListener('keydown', (e) => {
@@ -3676,6 +3984,44 @@
           closeAiDocModalFunc();
         }
       });
+
+      /* ========================================================================
+         АСИНХРОННАЯ ИНИЦИАЛИЗАЦИЯ ДАННЫХ (FETCH API + ОФЛАЙН FALLBACK)
+         ======================================================================== */
+      function initApp() {
+        previewKeys = Object.keys(PROFESSIONS_DATABASE);
+        updatePreviewCard(currentPreviewIndex);
+        checkHeroLastMatch();
+        renderCatalog();
+
+        const initialHash = window.location.hash.replace('#', '');
+        if (initialHash && screens[initialHash]) {
+          if (initialHash === 'result') {
+            const savedId = localStorage.getItem('digital_code_last_match') || 'frontend';
+            showProfessionDetails(savedId);
+          } else {
+            switchScreen(initialHash, false);
+          }
+        } else {
+          switchScreen('hero', false);
+        }
+      }
+
+      async function loadProfessionsData() {
+        try {
+          const response = await fetch('./professions.json');
+          if (response.ok) {
+            const remoteData = await response.json();
+            PROFESSIONS_DATABASE = remoteData;
+            console.info('База данных профессий успешно загружена через fetch API');
+          }
+        } catch (err) {
+          console.warn('Локальный режим: используется встроенная база данных (офлайн fallback)', err);
+        }
+        initApp();
+      }
+
+      loadProfessionsData();
 
     });
   </script>
