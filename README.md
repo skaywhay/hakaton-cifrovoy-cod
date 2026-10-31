@@ -5,7 +5,7 @@
 > **Номинация:** Web-разработка  
 > **Возрастная категория:** Старшая категория (8–11 классы)  
 > **Организатор:** ГОАОУ ЦОД «Кванториум» / ГАУДПО ЛО «ИРО», г. Липецк  
-> **Ролик на RUTUBE** [Ролик]([https://rutube.ru/video/private/28cce95cf334838bfba6c89f77bc4bfb/?p=WSQCtUz5s-_H7mLzaXEm6A](https://rutube.ru/video/private/d3e9f88a66f7b25805dd3da58ce3656f/?p=t-YuX3Iphk80x8b-1tIRWw))
+> **Ролик на RUTUBE** [Ролик]([https://rutube.ru/video/private/28cce95cf334838bfba6c89f77bc4bfb/?p=WSQCtUz5s-_H7mLzaXEm6A](https://rutube.ru/video/private/d3e9f88a66f7b25805dd3da58ce3656f/?p=t-YuX3Iphk80x8b-1tIRWw)
 >
 > **Открытый репозиторий GitHub:** [https://github.com/skaywhay/hakaton-cifrovoy-cod.git](https://github.com/skaywhay/hakaton-cifrovoy-cod.git)  
 > **Рабочая веб-версия (GitHub Pages):** [сайт](https://skaywhay.github.io/hakaton-cifrovoy-cod/)  
