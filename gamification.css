@@ -1,0 +1,982 @@
+/* ==========================================================================
+   ЦИФРОВОЙ КОД 2.0: ГЕЙМИФИКАЦИЯ (GAMIFICATION STYLES)
+   Рефакторинг дизайн-системы: устранение вайбкодинга, 8pt Grid, чистый UI
+   ========================================================================== */
+
+/* ВЕКТОРНАЯ ГРАФИКА (INLINE SVG ICONS) */
+.game-svg-icon {
+  display: inline-block;
+  vertical-align: -0.18em;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.game-modal-title .game-svg-icon {
+  margin-right: 6px;
+  vertical-align: -0.22em;
+}
+
+.btn .game-svg-icon {
+  margin-right: 6px;
+  vertical-align: -0.2em;
+}
+
+.game-modal-close-btn .game-svg-icon {
+  margin: 0;
+  vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+   1. ГЛОБАЛЬНЫЙ HUD (HEADS-UP DISPLAY) И КНОПКА ЗВУКА
+   -------------------------------------------------------------------------- */
+.gamification-hud-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-profile-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  box-shadow: var(--elevation-1);
+  border-radius: var(--radius-m);
+  padding: 4px 10px 4px 6px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  user-select: none;
+  height: 36px;
+}
+
+.hud-profile-pill:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--elevation-2);
+}
+
+.hud-level-badge {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: var(--font-family-mono, monospace);
+  letter-spacing: 0.02em;
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hud-xp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-xp-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  line-height: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-family-mono, monospace);
+}
+
+.hud-xp-track {
+  width: 72px;
+  height: 5px;
+  background: var(--color-surface-container-high);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.hud-xp-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-accent-green);
+  border-radius: var(--radius-full);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hud-pulse {
+  animation: hudPulseAnim 0.4s ease-out;
+}
+
+@keyframes hudPulseAnim {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); border-color: var(--color-primary); }
+  100% { transform: scale(1); }
+}
+
+.sound-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-s);
+  background: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  color: var(--color-secondary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sound-toggle-btn:hover {
+  background: var(--color-surface-container);
+  border-color: var(--color-border-strong);
+  color: var(--color-on-surface);
+}
+
+.sound-toggle-btn.muted {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+@media (max-width: 640px) {
+  .hud-xp-track {
+    width: 44px;
+  }
+  .hud-xp-label span.hud-rank-title {
+    display: none;
+  }
+  .gamification-hud-wrap {
+    gap: 4px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. ТОСТЫ НАЧИСЛЕНИЯ ОПЫТА (XP TOASTS)
+   -------------------------------------------------------------------------- */
+.game-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 90vw;
+  width: 340px;
+}
+
+.game-toast {
+  pointer-events: auto;
+  background: #0F172A;
+  color: #FFFFFF;
+  border-radius: var(--radius-m);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--elevation-3);
+  border: 1px solid #1E293B;
+  animation: toastSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
+}
+
+.game-toast.removing {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.game-toast-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.game-toast-body {
+  flex-grow: 1;
+}
+
+.game-toast-xp {
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #38BDF8;
+  font-family: var(--font-family-mono, monospace);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.game-toast-reason {
+  font-size: 0.8125rem;
+  color: #94A3B8;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   3. КНОПКИ ТЕСТ-ДРАЙВА В КАРТОЧКАХ И НА ЭКРАНЕ РЕЗУЛЬТАТА
+   -------------------------------------------------------------------------- */
+.prof-card-sim-slot {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: auto;
+  margin-bottom: 12px;
+  min-height: 36px;
+}
+
+.prof-card-sim-slot .sim-trigger-badge-btn {
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  padding: 7px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: var(--radius-s);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.sim-trigger-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-s);
+  border: 1px solid #BFDBFE;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sim-trigger-badge-btn:hover {
+  background-color: #DBEAFE;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.sim-trigger-badge-btn.solved {
+  background-color: var(--color-accent-green-bg);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green-border);
+}
+
+.sim-explainer-card {
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline);
+  border-left: 3px solid var(--color-primary);
+  border-radius: var(--radius-s);
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+
+.sim-explainer-card p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-on-surface-variant);
+}
+
+.sim-explainer-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  font-size: 0.8125rem;
+  margin-bottom: 4px;
+}
+
+.sim-result-banner {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-l);
+  box-shadow: var(--elevation-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.sim-result-banner-info h4 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-result-banner-info p {
+  font-size: 0.875rem;
+  color: var(--color-on-surface-variant);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   4. МОДАЛЬНОЕ ОКНО ИГРОВЫХ СИМУЛЯТОРОВ (GAME MODAL)
+   -------------------------------------------------------------------------- */
+.game-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+.game-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.game-modal-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-l);
+  box-shadow: var(--elevation-3);
+  width: 100%;
+  max-width: 660px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.98);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.game-modal-overlay.open .game-modal-card {
+  transform: scale(1);
+}
+
+.game-modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--color-outline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-modal-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-primary-container);
+  color: var(--color-on-primary-container);
+  border: 1px solid #BFDBFE;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+}
+
+.game-modal-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-s);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  background: var(--color-surface-container);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.game-modal-close-btn:hover {
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+}
+
+.game-modal-content {
+  padding: 20px 24px;
+}
+
+.game-modal-footer {
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-outline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   СИМУЛЯТОРЫ: ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ
+   -------------------------------------------------------------------------- */
+.sim-frontend-box {
+  background: #0F172A;
+  border-radius: var(--radius-m);
+  padding: 16px;
+  color: #FFFFFF;
+  margin-bottom: 18px;
+  border: 1px solid #1E293B;
+}
+
+.sim-browser-topbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1E293B;
+}
+
+.sim-browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #EF4444;
+}
+.sim-browser-dot:nth-child(2) { background: #F59E0B; }
+.sim-browser-dot:nth-child(3) { background: #10B981; }
+
+.sim-css-viewport {
+  height: 170px;
+  background: #020617;
+  border: 1px dashed #334155;
+  border-radius: var(--radius-s);
+  position: relative;
+  display: flex;
+  transition: all 0.2s ease;
+  padding: 14px;
+  overflow: hidden;
+}
+
+.sim-target-btn {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  border-radius: var(--radius-s);
+  box-shadow: var(--elevation-1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.sim-target-btn.centered {
+  background: var(--color-accent-green);
+  box-shadow: 0 0 16px rgba(5, 150, 105, 0.45);
+  transform: scale(1.02);
+}
+
+.sim-controls-group {
+  margin-bottom: 16px;
+}
+
+.sim-controls-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sim-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sim-prop-chip {
+  padding: 6px 12px;
+  font-size: 0.8125rem;
+  font-family: var(--font-family-mono, monospace);
+  font-weight: 600;
+  background: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sim-prop-chip:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-container-low);
+}
+
+.sim-prop-chip.active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+}
+
+/* QA BUG HUNTER */
+.sim-qa-form {
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-m);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.sim-qa-counter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFBEB;
+  color: #D97706;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-s);
+  border: 1px solid #FDE68A;
+  margin-bottom: 12px;
+  font-family: var(--font-family-mono, monospace);
+}
+
+.sim-qa-counter-badge.all-found {
+  background: var(--color-accent-green-bg);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green-border);
+}
+
+.sim-qa-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.sim-qa-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.sim-qa-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--color-outline);
+  background: #FFFFFF;
+  font-family: inherit;
+  font-size: 0.875rem;
+  transition: border-color var(--transition-fast);
+}
+
+.sim-qa-input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary-container);
+}
+
+.sim-bug-highlight {
+  border: 2px dashed #EF4444 !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.3) !important;
+  animation: bugShake 0.35s ease;
+}
+
+@keyframes bugShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.sim-bug-badge {
+  position: absolute;
+  right: 10px;
+  top: -8px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sim-qa-runaway-btn {
+  transition: transform 0.2s ease-out;
+  align-self: flex-start;
+}
+
+/* FIREWALL LOG PATROL */
+.sim-terminal-screen {
+  background: #020617;
+  border: 1px solid #1E293B;
+  border-radius: var(--radius-m);
+  padding: 16px;
+  font-family: var(--font-family-mono, monospace);
+  font-size: 0.8125rem;
+  color: #38BDF8;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--elevation-2);
+}
+
+.sim-terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #94A3B8;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1E293B;
+  font-size: 0.75rem;
+}
+
+.sim-log-line {
+  padding: 8px 12px;
+  border-radius: var(--radius-s);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  word-break: break-all;
+  border: 1px solid transparent;
+}
+
+.sim-log-line:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateX(2px);
+}
+
+.sim-log-line.blocked {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border-color: #10B981 !important;
+  color: #34D399 !important;
+}
+
+.sim-timer-bar-wrap {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.sim-timer-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--color-accent-green);
+  transition: width 0.1s linear;
+}
+
+/* НОВЫЙ СИМУЛЯТОР: BACKEND SQL BUILDER */
+.sim-sql-editor {
+  background: #0F172A;
+  border-radius: var(--radius-m);
+  padding: 16px;
+  font-family: var(--font-family-mono, monospace);
+  color: #F8FAFC;
+  min-height: 72px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border: 1px dashed #334155;
+  margin-bottom: 14px;
+}
+
+.sim-sql-slot {
+  background: #1E293B;
+  border: 1px solid #334155;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  color: #60A5FA;
+  font-weight: 700;
+}
+
+.sim-sql-token-btn {
+  background: #FFFFFF;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-s);
+  padding: 6px 12px;
+  font-family: var(--font-family-mono, monospace);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sim-sql-token-btn:hover {
+  background: var(--color-primary-container);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.sim-sql-token-btn.used {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* НОВЫЙ СИМУЛЯТОР: GAMEDEV PHYSICS JUMP */
+.sim-gamedev-canvas {
+  width: 100%;
+  height: 200px;
+  background: #0F172A;
+  border-radius: var(--radius-m);
+  border: 1px solid #1E293B;
+  display: block;
+  margin-bottom: 16px;
+}
+
+/* НОВЫЙ СИМУЛЯТОР: UI/UX CONTRAST MASTER */
+.sim-contrast-sample-box {
+  padding: 24px;
+  border-radius: var(--radius-m);
+  text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-outline);
+}
+
+.sim-contrast-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-s);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  margin-top: 10px;
+  font-family: var(--font-family-mono, monospace);
+}
+
+/* НОВЫЙ СИМУЛЯТОР: DEVOPS PIPELINE */
+.sim-pipeline-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--color-surface-container-low);
+  padding: 14px 18px;
+  border-radius: var(--radius-m);
+  margin-bottom: 16px;
+  border: 1px solid var(--color-outline);
+}
+
+.sim-pipeline-stage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.sim-pipeline-arrow {
+  color: var(--color-secondary);
+  opacity: 0.5;
+}
+
+/* НОВЫЙ СИМУЛЯТОР: AI/ML LOSS GRAPH */
+.sim-ml-chart-box {
+  width: 100%;
+  height: 180px;
+  background: #0F172A;
+  border-radius: var(--radius-m);
+  padding: 14px;
+  position: relative;
+  margin-bottom: 16px;
+  border: 1px solid #1E293B;
+}
+
+/* --------------------------------------------------------------------------
+   5. ГЕНЕРАТОР RPG-КАРТОЧКИ (CYBER-ID DEVCARD)
+   -------------------------------------------------------------------------- */
+.cyber-id-trigger-btn {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  border: 1px solid #334155 !important;
+  box-shadow: var(--elevation-1);
+}
+
+.cyber-id-trigger-btn:hover {
+  background: #1E293B !important;
+  border-color: #475569 !important;
+}
+
+.cyber-card-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.cyber-card-preview-viewport {
+  perspective: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+}
+
+#cyberIdCanvas {
+  max-width: 100%;
+  width: 380px;
+  height: auto;
+  border-radius: var(--radius-l);
+  box-shadow: var(--elevation-3);
+  transition: transform 0.15s ease-out;
+  cursor: grab;
+  border: 1px solid #334155;
+}
+
+.cyber-card-inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cyber-card-input-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   6. ПАСХАЛКИ (EASTER EGGS)
+   -------------------------------------------------------------------------- */
+.easter-coffee-btn {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.125rem;
+  margin-left: 8px;
+  user-select: none;
+  transition: transform var(--transition-fast);
+  vertical-align: middle;
+}
+
+.easter-coffee-btn:hover {
+  transform: scale(1.15) rotate(8deg);
+}
+
+.easter-coffee-btn:active {
+  transform: scale(0.95);
+}
+
+.screen-shake {
+  animation: screenShakeAnim 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes screenShakeAnim {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-2px, 0, 0); }
+  40%, 60% { transform: translate3d(2px, 0, 0); }
+}
+
+body.coffee-turbo-active {
+  --transition-smooth: 0.12s cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
+#matrixRainCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#matrixRainCanvas.active {
+  opacity: 0.95;
+  pointer-events: auto;
+}
+
+.matrix-close-hint {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  background: #0F172A;
+  border: 1px solid #10B981;
+  color: #10B981;
+  font-family: var(--font-family-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+  box-shadow: var(--elevation-2);
+}
+
+/* --------------------------------------------------------------------------
+   7. АДАПТИВНОСТЬ И ВЫВЕРКА ОТСТУПОВ НА ПЛАНШЕТАХ И МОБИЛЬНЫХ
+   -------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  .top-bar-content {
+    gap: 10px;
+  }
+  .top-bar-right-group {
+    gap: 6px;
+  }
+  .top-bar-right-group .btn {
+    padding: 0 12px;
+    height: 36px;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #openAiDocBtn span {
+    display: none;
+  }
+  #navCompareBtn span {
+    display: none;
+  }
+  .game-modal-header {
+    padding: 16px 20px 12px;
+  }
+  .game-modal-content {
+    padding: 16px 20px;
+  }
+  .game-modal-footer {
+    padding: 12px 20px 16px;
+  }
+  .sim-result-banner {
+    padding: 16px 20px;
+  }
+}
